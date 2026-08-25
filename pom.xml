@@ -38,9 +38,9 @@
 	</modules>
 
     <properties>
-			<openmrsPlatformVersion>2.6.15</openmrsPlatformVersion>
+			<openmrsPlatformVersion>2.5.12</openmrsPlatformVersion>
 			<openmrs.fhir2.version>2.5.0</openmrs.fhir2.version>
-			<web.services.version>2.49.0</web.services.version>
+			<web.services.version>2.44.0</web.services.version>
 			<junitVersion>4.13.1</junitVersion>
 			<lombokVersion>1.18.32</lombokVersion>
 			<mockitoVersion>3.5.11</mockitoVersion>

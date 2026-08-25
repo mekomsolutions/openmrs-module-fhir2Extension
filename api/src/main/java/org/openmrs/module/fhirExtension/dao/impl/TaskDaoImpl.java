@@ -2,18 +2,14 @@ package org.openmrs.module.fhirExtension.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.openmrs.Encounter;
-import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.module.fhir2.model.FhirTask;
 import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.openmrs.module.fhirExtension.model.FhirTaskRequestedPeriod;
 import org.openmrs.module.fhirExtension.model.Task;
 import org.openmrs.module.fhirExtension.model.TaskSearchRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -143,6 +139,22 @@ public class TaskDaoImpl implements TaskDao {
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public FhirTask saveOrUpdate(FhirTask task) {
+		if (task == null) {
+			return null;
+		}
+		Session session = sessionFactory.getCurrentSession();
+		if (task.getId() == null) {
+			session.persist(task);
+		} else {
+			session.merge(task);
+		}
+		session.flush();
+		return task;
+	}
+	
+	@Override
 	public List<FhirTask> save(List<FhirTask> tasks) {
 		tasks.forEach(task -> {
 			sessionFactory.getCurrentSession().persist(task);

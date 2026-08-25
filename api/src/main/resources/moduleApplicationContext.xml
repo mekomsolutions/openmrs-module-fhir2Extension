@@ -12,6 +12,12 @@
     
     <context:component-scan base-package="org.openmrs.module.fhirExtension"/>
 
+    <bean id="taskDao" class="org.openmrs.module.fhirExtension.dao.impl.TaskDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
     <bean id="exportTask" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager"/>
@@ -24,7 +30,7 @@
         </property>
         <property name="target">
             <bean class="org.openmrs.module.fhirExtension.service.impl.ExportTaskImpl">
-                <constructor-arg ref="fhirTaskDaoImpl"/>
+                <constructor-arg ref="taskDao"/>
                 <constructor-arg ref="conceptService"/>
             </bean>
         </property>

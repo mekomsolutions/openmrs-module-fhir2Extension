@@ -10,8 +10,8 @@ import org.openmrs.Person;
 import org.openmrs.User;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.model.FhirTask;
+import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -34,7 +34,7 @@ public class ExportTaskTest {
 	private ConceptService conceptService;
 	
 	@Mock
-	private FhirTaskDao fhirTaskDao;
+	private TaskDao taskDao;
 	
 	@InjectMocks
 	private ExportTaskImpl exportTask;
@@ -49,7 +49,7 @@ public class ExportTaskTest {
 	
 	@Test
 	public void shouldCreateFhirTask_whenRequestedForPatientDataExport() {
-		when(fhirTaskDao.createOrUpdate(any(FhirTask.class))).thenReturn(mockFhirTask());
+		when(taskDao.saveOrUpdate(any(FhirTask.class))).thenReturn(mockFhirTask());
 		when(conceptService.getConceptByName(any())).thenReturn(new Concept());
 		FhirTask initialTaskResponse = exportTask.getInitialTaskResponse("2023-05-01", "2023-05-31", "http://dummyUrl",
 		    false);
@@ -60,7 +60,7 @@ public class ExportTaskTest {
 		verify(conceptService, times(1)).getConceptByName("FHIR Export Start Date");
 		verify(conceptService, times(1)).getConceptByName("FHIR Export End Date");
 		verify(conceptService, times(2)).getConceptByName("FHIR Export Anonymise Flag");
-		verify(fhirTaskDao, times(1)).createOrUpdate(any(FhirTask.class));
+		verify(taskDao, times(1)).saveOrUpdate(any(FhirTask.class));
 		assertEquals(FhirTask.TaskStatus.ACCEPTED, initialTaskResponse.getStatus());
 	}
 	

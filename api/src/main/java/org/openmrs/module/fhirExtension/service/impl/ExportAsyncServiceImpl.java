@@ -5,8 +5,8 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.UserContext;
-import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.model.FhirTask;
+import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.openmrs.module.fhirExtension.export.Exporter;
 import org.openmrs.module.fhirExtension.export.anonymise.handler.AnonymiseHandler;
 import org.openmrs.module.fhirExtension.export.anonymise.impl.CorrelationCache;
@@ -24,7 +24,7 @@ import java.util.*;
 @Transactional
 public class ExportAsyncServiceImpl implements ExportAsyncService {
 	
-	private FhirTaskDao fhirTaskDao;
+	private TaskDao taskDao;
 	
 	private ConceptService conceptService;
 	
@@ -35,9 +35,9 @@ public class ExportAsyncServiceImpl implements ExportAsyncService {
 	private CorrelationCache correlationCache;
 	
 	@Autowired
-	public ExportAsyncServiceImpl(FhirTaskDao fhirTaskDao, ConceptService conceptService,
-	    FileExportService fileExportService, AnonymiseHandler anonymiseHandler, CorrelationCache correlationCache) {
-		this.fhirTaskDao = fhirTaskDao;
+	public ExportAsyncServiceImpl(TaskDao taskDao, ConceptService conceptService, FileExportService fileExportService,
+	    AnonymiseHandler anonymiseHandler, CorrelationCache correlationCache) {
+		this.taskDao = taskDao;
 		this.conceptService = conceptService;
 		this.fileExportService = fileExportService;
 		this.anonymiseHandler = anonymiseHandler;
@@ -73,7 +73,7 @@ public class ExportAsyncServiceImpl implements ExportAsyncService {
 				taskStatus = FhirTask.TaskStatus.COMPLETED;
 			}
 			fhirTask.setStatus(taskStatus);
-			fhirTaskDao.createOrUpdate(fhirTask);
+			taskDao.saveOrUpdate(fhirTask);
 		}
 	}
 	

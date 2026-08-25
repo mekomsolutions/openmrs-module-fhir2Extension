@@ -1,7 +1,6 @@
 package org.openmrs.module.fhirExtension.service.impl;
 
 import org.openmrs.api.VisitService;
-import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.model.FhirTask;
 import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.openmrs.module.fhirExtension.dao.TaskRequestedPeriodDao;
@@ -18,8 +17,6 @@ import java.util.ArrayList;
 @Transactional
 public class TaskServiceImpl implements TaskService {
 	
-	private FhirTaskDao fhirTaskDao;
-	
 	private VisitService visitService;
 	
 	private TaskDao taskDao;
@@ -28,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Override
 	public Task saveTask(Task task) {
-		fhirTaskDao.createOrUpdate(task.getFhirTask());
+		taskDao.saveOrUpdate(task.getFhirTask());
 		if (task.getFhirTaskRequestedPeriod() != null) {
 			taskRequestedPeriodDao.save(task.getFhirTaskRequestedPeriod());
 		}
@@ -74,10 +71,6 @@ public class TaskServiceImpl implements TaskService {
 	
 	public void setVisitService(VisitService visitService) {
 		this.visitService = visitService;
-	}
-	
-	public void setFhirTaskDao(FhirTaskDao fhirTaskDao) {
-		this.fhirTaskDao = fhirTaskDao;
 	}
 	
 	public void setTaskDao(TaskDao taskDao) {

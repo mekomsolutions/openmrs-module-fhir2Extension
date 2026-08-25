@@ -6,11 +6,11 @@ import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.FhirConstants;
-import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.model.FhirReference;
 import org.openmrs.module.fhir2.model.FhirTask;
 import org.openmrs.module.fhir2.model.FhirTaskInput;
 import org.openmrs.module.fhir2.model.FhirTaskOutput;
+import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.openmrs.module.fhirExtension.service.ExportTask;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +28,12 @@ public class ExportTaskImpl implements ExportTask {
 	
 	private static final String NON_ANONYMISE_REQUIRED_PRIVILEGE = "Export Non Anonymised Patient Data";
 	
-	private FhirTaskDao fhirTaskDao;
+	private TaskDao taskDao;
 	
 	private ConceptService conceptService;
 	
-	public ExportTaskImpl(FhirTaskDao fhirTaskDao, ConceptService conceptService) {
-		this.fhirTaskDao = fhirTaskDao;
+	public ExportTaskImpl(TaskDao taskDao, ConceptService conceptService) {
+		this.taskDao = taskDao;
 		this.conceptService = conceptService;
 	}
 	
@@ -57,7 +57,7 @@ public class ExportTaskImpl implements ExportTask {
 		basedOnReference.setReference(conceptService.getConceptByName(ANONYMISE_CONCEPT).getUuid()); // Assume concept uuid is 8741c3e7-a250-4808-977c-a89459bb6c9d
 		basedOnReference.setName("Patient Data Export");
 		fhirTask.setBasedOnReferences(Collections.singleton(basedOnReference));
-		fhirTaskDao.createOrUpdate(fhirTask);
+		taskDao.saveOrUpdate(fhirTask);
 		
 		return fhirTask;
 	}

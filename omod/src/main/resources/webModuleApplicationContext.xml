@@ -27,11 +27,6 @@
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
 
 	<context:component-scan base-package="org.openmrs.module.fhirExtension" />
-	<bean id="taskDao" class="org.openmrs.module.fhirExtension.dao.impl.TaskDaoImpl">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
-		</property>
-	</bean>
 	<bean id="taskRequestedPeriodDao" class="org.openmrs.module.fhirExtension.dao.impl.TaskRequestedPeriodDaoImpl">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
@@ -39,7 +34,6 @@
 	</bean>
 	<bean id="taskServiceTarget" class="org.openmrs.module.fhirExtension.service.impl.TaskServiceImpl">
 		<property name="visitService" ref="visitService"/>
-		<property name="fhirTaskDao" ref="fhirTaskDaoImpl"/>
 		<property name="taskDao" ref="taskDao"/>
 		<property name="taskRequestedPeriodDao" ref="taskRequestedPeriodDao"/>
 	</bean>

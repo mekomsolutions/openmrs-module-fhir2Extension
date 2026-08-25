@@ -17,8 +17,8 @@ import org.openmrs.User;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.api.FhirConditionService;
-import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.model.FhirTask;
+import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.openmrs.module.fhir2.model.FhirTaskInput;
 import org.openmrs.module.fhirExtension.export.Exporter;
 import org.openmrs.module.fhirExtension.export.anonymise.handler.AnonymiseHandler;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 public class ExportAsyncServiceTest {
 	
 	@Mock
-	private FhirTaskDao fhirTaskDao;
+	private TaskDao taskDao;
 	
 	@Mock
 	private ConceptService conceptService;
@@ -82,7 +82,7 @@ public class ExportAsyncServiceTest {
 		
 		assertEquals(FhirTask.TaskStatus.COMPLETED, fhirTask.getStatus());
 		assertEquals(4, fhirTask.getInput().size());
-		verify(fhirTaskDao, times(1)).createOrUpdate(any(FhirTask.class));
+		verify(taskDao, times(1)).saveOrUpdate(any(FhirTask.class));
 	}
 	
 	@Test
@@ -96,7 +96,7 @@ public class ExportAsyncServiceTest {
 		exportAsyncServiceImpl.export(fhirTask, "2023-AB-CD", "2023-12-31", Context.getUserContext(), false);
 
 		assertEquals(FhirTask.TaskStatus.REJECTED, fhirTask.getStatus());
-		verify(fhirTaskDao, times(1)).createOrUpdate(any(FhirTask.class));
+		verify(taskDao, times(1)).saveOrUpdate(any(FhirTask.class));
 	}
 	
 	@Test
@@ -113,7 +113,7 @@ public class ExportAsyncServiceTest {
 
 		assertEquals(FhirTask.TaskStatus.COMPLETED, fhirTask.getStatus());
 		verify(anonymiseHandler, times(1)).anonymise(any(IBaseResource.class), eq("condition"));
-		verify(fhirTaskDao, times(1)).createOrUpdate(any(FhirTask.class));
+		verify(taskDao, times(1)).saveOrUpdate(any(FhirTask.class));
 	}
 	
 	private FhirTask mockFhirTask() {

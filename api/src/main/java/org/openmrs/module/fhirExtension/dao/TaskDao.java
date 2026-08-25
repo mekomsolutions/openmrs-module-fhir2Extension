@@ -18,5 +18,8 @@ public interface TaskDao {
 	
 	List<Task> searchTasks(TaskSearchRequest taskSearchRequest);
 	
+	/** Persist a new task or merge a detached instance via Hibernate. */
+	FhirTask saveOrUpdate(FhirTask task);
+	
 	List<FhirTask> save(List<FhirTask> tasks);
 }

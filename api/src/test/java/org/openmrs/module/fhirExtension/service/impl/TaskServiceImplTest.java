@@ -5,7 +5,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.api.VisitService;
-import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.model.FhirTask;
 import org.openmrs.module.fhirExtension.dao.TaskDao;
 import org.openmrs.module.fhirExtension.dao.TaskRequestedPeriodDao;
@@ -22,9 +21,6 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 public class TaskServiceImplTest {
-	
-	@Mock
-	private FhirTaskDao fhirTaskDao;
 	
 	@Mock
 	private VisitService visitService;
@@ -49,12 +45,12 @@ public class TaskServiceImplTest {
 		requestedPeriod.setRequestedStartTime(new Date());
 		Task task = new Task(fhirTask, requestedPeriod);
 		
-		when(fhirTaskDao.createOrUpdate(any())).thenReturn(task.getFhirTask());
+		when(taskDao.saveOrUpdate(any(FhirTask.class))).thenReturn(task.getFhirTask());
 		when(taskRequestedPeriodDao.save((FhirTaskRequestedPeriod) any())).thenReturn(task.getFhirTaskRequestedPeriod());
 		
 		Task savedTask = taskService.saveTask(task);
 		
-		verify(fhirTaskDao, times(1)).createOrUpdate(any());
+		verify(taskDao, times(1)).saveOrUpdate(any(FhirTask.class));
 		verify(taskRequestedPeriodDao, times(1)).save((FhirTaskRequestedPeriod) any());
 	}
 	
